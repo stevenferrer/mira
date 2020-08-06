@@ -4,7 +4,7 @@ import (
 	"reflect"
 )
 
-// Type is a simplified type info
+// Type is a type info
 type Type struct {
 	name     string
 	v        interface{}
@@ -14,7 +14,7 @@ type Type struct {
 	numeric  bool
 }
 
-// NewType inspects v and creates a type meta data
+// NewType inspects v and returns a type info
 func NewType(v interface{}) *Type {
 	t := reflect.TypeOf(v)
 	et := t
@@ -64,8 +64,7 @@ func (t Type) PkgPath() string {
 
 func nillable(t reflect.Type) bool {
 	switch t.Kind() {
-	case reflect.Slice, reflect.Array,
-		reflect.Ptr, reflect.Map:
+	case reflect.Map, reflect.Slice, reflect.Ptr:
 		return true
 	}
 	return false

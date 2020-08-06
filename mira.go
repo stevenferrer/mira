@@ -6,6 +6,7 @@ import (
 
 // Type is a type info
 type Type struct {
+	name     string
 	v        interface{}
 	t        reflect.Type
 	pkgPath  string
@@ -18,12 +19,17 @@ func NewType(v interface{}) *Type {
 	t := reflect.TypeOf(v)
 	k := kind(t)
 	return &Type{
+		name:     name(t),
 		v:        v,
 		t:        t,
 		pkgPath:  pkgPath(t),
 		nillable: nillable(k),
 		kind:     k,
 	}
+}
+
+func (t Type) Name() string {
+	return t.name
 }
 
 // V returns the value
@@ -103,6 +109,7 @@ func numeric(t reflect.Type) bool {
 	return false
 }
 
+// pkgPath resolves the pkg path
 func pkgPath(t reflect.Type) string {
 	pkg := t.PkgPath()
 	if len(pkg) > 0 {
@@ -114,4 +121,19 @@ func pkgPath(t reflect.Type) string {
 		return pkgPath(t.Elem())
 	}
 	return pkg
+}
+
+// name resolves the underlying type name
+func name(t reflect.Type) string {
+	s := t.Name()
+	if len(s) > 0 {
+		return s
+	}
+
+	switch t.Kind() {
+	case reflect.Slice, reflect.Array, reflect.Ptr:
+		return name(t.Elem())
+	}
+
+	return s
 }

@@ -2,6 +2,7 @@ package mira
 
 import (
 	"math/big"
+	"reflect"
 	"testing"
 
 	"github.com/google/uuid"
@@ -239,6 +240,87 @@ func TestNewType(t *testing.T) {
 			assert.Equal(t, tt.want.Kind().String(), got.Kind().String(), "expected kind")
 			assert.Equal(t, tt.want.PkgPath(), got.PkgPath(), "expected pkg path")
 			assert.NotNil(t, got.t)
+		})
+	}
+}
+
+func Test_name(t *testing.T) {
+	type args struct {
+		t reflect.Type
+	}
+
+	i := int(0)
+	s := ""
+	ints := []int{}
+	inta := [8]int{}
+	intsPtr := []*int{}
+	intaPtr := [8]*int{}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "int",
+			args: args{
+				t: reflect.TypeOf(i),
+			},
+			want: "int",
+		},
+		{
+			name: "int",
+			args: args{
+				t: reflect.TypeOf(&i),
+			},
+			want: "int",
+		},
+		{
+			name: "string",
+			args: args{
+				t: reflect.TypeOf(s),
+			},
+			want: "string",
+		},
+		{
+			name: "*string",
+			args: args{
+				t: reflect.TypeOf(&s),
+			},
+			want: "string",
+		},
+		{
+			name: "[]int",
+			args: args{
+				t: reflect.TypeOf(ints),
+			},
+			want: "int",
+		},
+		{
+			name: "[8]int",
+			args: args{
+				t: reflect.TypeOf(inta),
+			},
+			want: "int",
+		},
+		{
+			name: "[]*int",
+			args: args{
+				t: reflect.TypeOf(intsPtr),
+			},
+			want: "int",
+		},
+		{
+			name: "[8]*int",
+			args: args{
+				t: reflect.TypeOf(intaPtr),
+			},
+			want: "int",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := name(tt.args.t)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

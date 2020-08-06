@@ -28,6 +28,7 @@ func TestNewType(t *testing.T) {
 				v:        int(0),
 				t:        reflect.TypeOf(int(0)),
 				nillable: false,
+				numeric:  true,
 				pkgPath:  "",
 			},
 		},
@@ -41,6 +42,7 @@ func TestNewType(t *testing.T) {
 				v:        IntPtr(0),
 				t:        reflect.TypeOf(IntPtr(0)).Elem(),
 				nillable: true,
+				numeric:  true,
 				pkgPath:  "",
 			},
 		},
@@ -77,7 +79,8 @@ func TestNewType(t *testing.T) {
 			assert.Equal(t, tt.want.Name(), got.Name())
 			assert.Equal(t, tt.want.V(), got.V())
 			assert.Equal(t, tt.want.T(), got.T())
-			assert.Equal(t, tt.want.Nillable(), got.Nillable())
+			assert.Equal(t, tt.want.IsNillable(), got.IsNillable())
+			assert.Equal(t, tt.want.IsNumeric(), got.IsNumeric())
 			assert.Equal(t, tt.want.PkgPath(), got.PkgPath())
 		})
 	}

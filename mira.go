@@ -6,43 +6,32 @@ import (
 
 // Type is a type info
 type Type struct {
-	name     string
 	v        interface{}
 	t        reflect.Type
 	pkgPath  string
+	kind     Kind
 	nillable bool
-	numeric  bool
 }
 
 // NewType inspects v and returns a type info
 func NewType(v interface{}) *Type {
 	t := reflect.TypeOf(v)
-	et := t
-	for et.Kind() == reflect.Ptr {
-		et = et.Elem()
-	}
-
+	k := kind(t)
 	return &Type{
-		name:     et.Name(),
 		v:        v,
-		t:        et,
-		pkgPath:  et.PkgPath(),
-		nillable: nillable(t),
-		numeric:  numeric(t),
+		t:        t,
+		pkgPath:  pkgPath(t),
+		nillable: nillable(k),
+		kind:     k,
 	}
 }
 
-// Name is the type name
-func (t Type) Name() string {
-	return t.name
-}
-
-// V is the raw value
+// V returns the value
 func (t Type) V() interface{} {
 	return t.v
 }
 
-// T is the the reflect.Type
+// T returns the reflect.Type
 func (t Type) T() reflect.Type {
 	return t.t
 }
@@ -52,9 +41,8 @@ func (t Type) IsNillable() bool {
 	return t.nillable
 }
 
-// IsNumeric is true when type is numeric
-func (t Type) IsNumeric() bool {
-	return t.numeric
+func (t Type) Kind() Kind {
+	return t.kind
 }
 
 // PkgPath is the package path of the type
@@ -62,12 +50,37 @@ func (t Type) PkgPath() string {
 	return t.pkgPath
 }
 
-func nillable(t reflect.Type) bool {
-	switch t.Kind() {
-	case reflect.Map, reflect.Slice, reflect.Ptr:
+func nillable(k Kind) bool {
+	switch k {
+	case Slice, Map, Ptr:
 		return true
 	}
 	return false
+}
+
+func kind(t reflect.Type) Kind {
+	if numeric(t) {
+		return Numeric
+	}
+
+	switch t.Kind() {
+	case reflect.Bool:
+		return Bool
+	case reflect.String:
+		return String
+	case reflect.Slice:
+		return Slice
+	case reflect.Array:
+		return Array
+	case reflect.Map:
+		return Map
+	case reflect.Struct:
+		return Struct
+	case reflect.Ptr:
+		return Ptr
+	}
+
+	return Unknown
 }
 
 func numeric(t reflect.Type) bool {
@@ -85,9 +98,20 @@ func numeric(t reflect.Type) bool {
 		reflect.Float32,
 		reflect.Float64:
 		return true
-	case reflect.Ptr:
-		et := t.Elem()
-		return numeric(et)
 	}
+
 	return false
+}
+
+func pkgPath(t reflect.Type) string {
+	pkg := t.PkgPath()
+	if len(pkg) > 0 {
+		return pkg
+	}
+	switch t.Kind() {
+	case reflect.Ptr, reflect.Map,
+		reflect.Slice, reflect.Array:
+		return pkgPath(t.Elem())
+	}
+	return pkg
 }

@@ -2,9 +2,9 @@ package mira
 
 import (
 	"math/big"
-	"reflect"
 	"testing"
 
+	"github.com/goccy/go-reflect"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )

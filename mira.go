@@ -1,7 +1,7 @@
 package mira
 
 import (
-	"github.com/goccy/go-reflect"
+	"reflect"
 )
 
 // Type is a type info

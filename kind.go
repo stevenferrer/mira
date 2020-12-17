@@ -7,11 +7,12 @@ type Kind uint
 
 // List of type kinds
 const (
-	// Unknown is an unknow kind
+	// Unknown is an unknown kind
 	Unknown Kind = iota
 	// Bool is a boolean kind
 	Bool
-	// Numeric is a numeric kind which includes int(8, 16, 32, 64), uint(8, 16, 32, 64), float(32, 64)
+	// Numeric is a numeric kind which includes int(8, 16, 32, 64),
+	// uint(8, 16, 32, 64) and float(32, 64)
 	Numeric
 	// Array is an array kind
 	Array
@@ -42,7 +43,7 @@ func (k Kind) String() string {
 }
 
 var kindNames = []string{
-	Unknown:   "invalid",
+	Unknown:   "unknown",
 	Numeric:   "numeric",
 	Bool:      "bool",
 	Array:     "array",

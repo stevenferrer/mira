@@ -17,36 +17,37 @@ type Type struct {
 // NewType inspects v and returns a type info
 func NewType(v interface{}) *Type {
 	t := reflect.TypeOf(v)
-	k := kind(t)
 	return &Type{
 		name:     name(t),
 		v:        v,
 		t:        t,
 		pkgPath:  pkgPath(t),
-		nillable: nillable(k),
-		kind:     k,
+		nillable: nillable(t),
+		kind:     kind(t),
 	}
 }
 
+// Name is the type name
 func (t Type) Name() string {
 	return t.name
 }
 
-// V returns the value
+// V is the type value
 func (t Type) V() interface{} {
 	return t.v
 }
 
-// T returns the reflect.Type
+// T is the reflect.Type
 func (t Type) T() reflect.Type {
 	return t.t
 }
 
-// IsNillable is true when type is nillable and false otherwise
+// IsNillable is true when the type is nillable
 func (t Type) IsNillable() bool {
 	return t.nillable
 }
 
+// Kind is the type kind
 func (t Type) Kind() Kind {
 	return t.kind
 }
@@ -56,9 +57,11 @@ func (t Type) PkgPath() string {
 	return t.pkgPath
 }
 
-func nillable(k Kind) bool {
-	switch k {
-	case Slice, Map, Ptr:
+func nillable(t reflect.Type) bool {
+	switch t.Kind() {
+	case reflect.Slice,
+		reflect.Map,
+		reflect.Ptr:
 		return true
 	}
 	return false
@@ -116,14 +119,17 @@ func pkgPath(t reflect.Type) string {
 		return pkg
 	}
 	switch t.Kind() {
-	case reflect.Ptr, reflect.Map,
-		reflect.Slice, reflect.Array:
+	case reflect.Ptr,
+		reflect.Map,
+		reflect.Slice,
+		reflect.Array:
 		return pkgPath(t.Elem())
 	}
 	return pkg
 }
 
-// name resolves the underlying type name
+// name resolves the underlying type name without the actual package
+// []int has an int name, *int has an int name, big.Int has an Int name
 func name(t reflect.Type) string {
 	s := t.Name()
 	if len(s) > 0 {
@@ -131,7 +137,9 @@ func name(t reflect.Type) string {
 	}
 
 	switch t.Kind() {
-	case reflect.Slice, reflect.Array, reflect.Ptr:
+	case reflect.Slice,
+		reflect.Array,
+		reflect.Ptr:
 		return name(t.Elem())
 	}
 

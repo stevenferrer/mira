@@ -1,6 +1,7 @@
 package mira
 
 import (
+	"fmt"
 	"math/big"
 	"reflect"
 	"testing"
@@ -40,6 +41,7 @@ func TestNewType(t *testing.T) {
 			want: &Type{
 				v:    int(0),
 				kind: Numeric,
+				name: "int",
 			},
 		},
 		{
@@ -51,6 +53,7 @@ func TestNewType(t *testing.T) {
 				v:        IntPtr(0),
 				nillable: true,
 				kind:     Ptr,
+				name:     "int",
 			},
 		},
 		{
@@ -61,6 +64,7 @@ func TestNewType(t *testing.T) {
 			want: &Type{
 				v:    false,
 				kind: Bool,
+				name: "bool",
 			},
 		},
 		{
@@ -72,6 +76,7 @@ func TestNewType(t *testing.T) {
 				v:        bPtr,
 				kind:     Ptr,
 				nillable: true,
+				name:     "bool",
 			},
 		},
 		{
@@ -82,6 +87,7 @@ func TestNewType(t *testing.T) {
 			want: &Type{
 				v:    *sPtr,
 				kind: String,
+				name: "string",
 			},
 		},
 		{
@@ -93,6 +99,7 @@ func TestNewType(t *testing.T) {
 				v:        sPtr,
 				kind:     Ptr,
 				nillable: true,
+				name:     "string",
 			},
 		},
 		{
@@ -126,6 +133,7 @@ func TestNewType(t *testing.T) {
 				v:       *bigIntPtr,
 				pkgPath: "math/big",
 				kind:    Struct,
+				name:    "Int",
 			},
 		},
 		{
@@ -138,6 +146,7 @@ func TestNewType(t *testing.T) {
 				pkgPath:  "math/big",
 				kind:     Ptr,
 				nillable: true,
+				name:     "Int",
 			},
 		},
 
@@ -150,6 +159,7 @@ func TestNewType(t *testing.T) {
 				v:        ints,
 				nillable: true,
 				kind:     Slice,
+				name:     "int",
 			},
 		},
 		{
@@ -160,6 +170,7 @@ func TestNewType(t *testing.T) {
 			want: &Type{
 				v:    inta,
 				kind: Array,
+				name: "int",
 			},
 		},
 		{
@@ -172,6 +183,7 @@ func TestNewType(t *testing.T) {
 				nillable: true,
 				pkgPath:  "math/big",
 				kind:     Slice,
+				name:     "Int",
 			},
 		},
 		{
@@ -184,6 +196,7 @@ func TestNewType(t *testing.T) {
 				nillable: true,
 				pkgPath:  "math/big",
 				kind:     Slice,
+				name:     "Int",
 			},
 		},
 		{
@@ -195,6 +208,7 @@ func TestNewType(t *testing.T) {
 				v:       bigInta,
 				pkgPath: "math/big",
 				kind:    Array,
+				name:    "Int",
 			},
 		},
 		{
@@ -206,6 +220,7 @@ func TestNewType(t *testing.T) {
 				v:       bigIntPtra,
 				pkgPath: "math/big",
 				kind:    Array,
+				name:    "Int",
 			},
 		},
 		{
@@ -217,6 +232,7 @@ func TestNewType(t *testing.T) {
 				v:       myUUID,
 				pkgPath: "github.com/google/uuid",
 				kind:    Array,
+				name:    "UUID",
 			},
 		},
 		{
@@ -229,6 +245,7 @@ func TestNewType(t *testing.T) {
 				pkgPath:  "github.com/google/uuid",
 				kind:     Ptr,
 				nillable: true,
+				name:     "UUID",
 			},
 		},
 	}
@@ -239,6 +256,7 @@ func TestNewType(t *testing.T) {
 			assert.Equal(t, tt.want.IsNillable(), got.IsNillable(), "expected nillable")
 			assert.Equal(t, tt.want.Kind().String(), got.Kind().String(), "expected kind")
 			assert.Equal(t, tt.want.PkgPath(), got.PkgPath(), "expected pkg path")
+			assert.Equal(t, tt.want.Name(), got.Name(), "expected type name")
 			assert.NotNil(t, got.t)
 		})
 	}
@@ -268,7 +286,7 @@ func Test_name(t *testing.T) {
 			want: "int",
 		},
 		{
-			name: "int",
+			name: "*int",
 			args: args{
 				t: reflect.TypeOf(&i),
 			},
@@ -318,7 +336,7 @@ func Test_name(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(fmt.Sprintf("%s name is %s", tt.name, tt.want), func(t *testing.T) {
 			got := name(tt.args.t)
 			assert.Equal(t, tt.want, got)
 		})

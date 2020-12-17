@@ -15,7 +15,7 @@ func IntPtr(i int) *int {
 	return &i
 }
 
-// IntIPtr int8 to *int8
+// Int8Ptr int8 to *int8
 func Int8Ptr(i int8) *int8 {
 	return &i
 }

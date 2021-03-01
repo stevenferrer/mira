@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPtrs(t *testing.T) {
+func TestTypePtrs(t *testing.T) {
 	s := ""
 	assert.Equal(t, &s, StrPtr(s))
 

@@ -20,7 +20,7 @@ import (
 
 func main() {
     v := int64(1)
-    typeInfo := mira.NewTypeInf(v)
+    typeInfo := mira.NewTypeInfo(v)
 
     // check if value is numeric
     if typeInfo.IsNumeric() {

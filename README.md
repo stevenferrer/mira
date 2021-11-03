@@ -5,7 +5,7 @@ This package wraps the `reflect` package and adds some useful methods for intros
 ## Installation
 
 ```console
-$ go get github.com/sf9v/mira
+$ go get github.com/stevenferrer/mira
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ $ go get github.com/sf9v/mira
 import (
     "fmt"
 
-    "github.com/sf9v/mira"
+    "github.com/stevenferrer/mira"
 )
 
 func main() {

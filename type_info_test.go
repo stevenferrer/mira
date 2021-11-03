@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/sf9v/mira"
+	"github.com/stevenferrer/mira"
 )
 
 type ByteArray [16]byte
@@ -189,7 +189,7 @@ func TestNewTypeInfo(t *testing.T) {
 				v: ByteArray{},
 			},
 			want: want{
-				pkgPath: "github.com/sf9v/mira_test",
+				pkgPath: "github.com/stevenferrer/mira_test",
 				name:    "ByteArray",
 			},
 		},
@@ -199,7 +199,7 @@ func TestNewTypeInfo(t *testing.T) {
 				v: &ByteArray{},
 			},
 			want: want{
-				pkgPath:  "github.com/sf9v/mira_test",
+				pkgPath:  "github.com/stevenferrer/mira_test",
 				nillable: true,
 				name:     "ByteArray",
 			},

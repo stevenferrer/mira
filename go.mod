@@ -1,4 +1,4 @@
-module github.com/sf9v/mira
+module github.com/stevenferrer/mira
 
 go 1.14
 
